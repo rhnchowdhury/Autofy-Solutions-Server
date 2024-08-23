@@ -75,6 +75,18 @@ app.put("/update/:id", (req, res) => {
   );
 });
 
+// delete blog data
+app.delete("/blog/:id", (req, res) => {
+  const { id } = req.params;
+  dbConnection.query("DELETE FROM data where id = ?", [id], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.listen(4000, () => {
   console.log("listening");
 });
