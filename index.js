@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// database connect
+// database connection
 const dbConnection = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -19,13 +19,41 @@ app.get("/", (req, res) => {
   res.send("Server is running...");
 });
 
-app.get("/home", (req, res) => {
+// create blog data
+app.post("/blog", (req, res) => {
+  const { title, select, desc, status } = req.body;
+  dbConnection.query(
+    "INSERT into data (`title`,`type`,`content`, `status`) VALUES(?,?,?,?)",
+    [title, select, desc, status],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+// get all blog data
+app.get("/blog", (req, res) => {
   dbConnection.query("SELECT * FROM data", (err, result) => {
     if (err) {
       console.log(err);
     } else {
       res.send(result);
-      // console.log(result);
+    }
+  });
+});
+
+// get blog data by id
+app.get("/blog/:id", (req, res) => {
+  const { id } = req.params;
+  dbConnection.query("SELECT * FROM data where id = ?", [id], (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
     }
   });
 });
