@@ -58,6 +58,23 @@ app.get("/blog/:id", (req, res) => {
   });
 });
 
+// update blog data
+app.put("/update/:id", (req, res) => {
+  const { id } = req.params;
+  const { title, desc } = req.body;
+  dbConnection.query(
+    "UPDATE data set title=?, content=? where id=?",
+    [title, desc, id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 app.listen(4000, () => {
   console.log("listening");
 });
